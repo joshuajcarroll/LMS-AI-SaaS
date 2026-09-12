@@ -9,10 +9,17 @@ export default function Home() {
           style={{ animationDelay: "1s" }}
         />
         <div
-          className="absolute top-[40%] right-[20%] w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[80px] animate-pulse"
+          className="absolute top-[40%] right-[20%] w-100 h-[400px] bg-cyan-500/10 rounded-full blur-[80px] animate-pulse"
           style={{ animationDelay: "2s" }}
         />
       </div>
+      {/* Noise texture overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.015]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }}
+      />
     </div>
   );
 }
