@@ -1,10 +1,31 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Show, SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
-import { BookOpen, Code2, LayoutDashboard, Play, Sparkles } from "lucide-react";
+import {
+  Show,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  useAuth,
+  UserButton,
+} from "@clerk/nextjs";
+import {
+  BookOpen,
+  Code2,
+  LayoutDashboard,
+  Menu,
+  Play,
+  Sparkles,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
 
 function Logo() {
   return (
@@ -111,6 +132,102 @@ function Header() {
               );
             })}
           </div>
+        </Show>
+      </div>
+      {/* Right section */}
+      <div className="flex items-center gap-3">
+        <Show when={"signed-out"}>
+          {/* Mobile: Dropdown menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-zinc-900 border-zinc-800"
+            >
+              {loggedOutLinks.map((link) => (
+                <DropdownMenuItem key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-zinc-300 cursor-pointer"
+                  >
+                    {link.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <SignInButton mode="modal">
+            <Button
+              variant="ghost"
+              className="text-zinc-400 hover:text-white hover:bg-white/5"
+            >
+              Sign in
+            </Button>
+          </SignInButton>
+          <Link href="/pricing" className="hidden sm:block">
+            <Button className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white border-0 shadow-lg shadow-violet-600/25">
+              Start Learning
+            </Button>
+          </Link>
+        </Show>
+
+        <Show when={"signed-in"}>
+          {/* Mobile: Dropdown menu next to user profile */}
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-zinc-900 border-zinc-800"
+            >
+              {loggedInLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive =
+                  pathname === link.href ||
+                  (link.href !== "/dashboard" &&
+                    pathname.startsWith(link.href));
+
+                return (
+                  <DropdownMenuItem key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "flex items-center gap-2 cursor-pointer",
+                        isActive ? "text-violet-300" : "text-zinc-300",
+                      )}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {link.label}
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "w-9 h-9 ring-2 ring-violet-500/20",
+              },
+            }}
+          />
         </Show>
       </div>
     </nav>
