@@ -1,4 +1,7 @@
-import { BlockContentIcon, BookIcon, PlayIcon, TagIcon } from "@sanity/icons";
+import BlockContentIcon from "@sanity/icons/BlockContent";
+import BookIcon from "@sanity/icons/Book";
+import PlayIcon from "@sanity/icons/Play";
+import TagIcon from "@sanity/icons/Tag";
 import type { StructureResolver } from "sanity/structure";
 
 export const structure: StructureResolver = (S, context) =>

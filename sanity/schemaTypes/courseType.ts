@@ -1,4 +1,5 @@
-import { BookIcon, UserIcon } from "@sanity/icons";
+import BookIcon from "@sanity/icons/Book";
+import UserIcon from "@sanity/icons/User";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const courseType = defineType({

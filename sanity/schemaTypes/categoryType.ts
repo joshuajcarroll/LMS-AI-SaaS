@@ -1,4 +1,5 @@
-import { BookIcon, TagIcon } from "@sanity/icons";
+import BookIcon from "@sanity/icons/Book";
+import TagIcon from "@sanity/icons/Tag";
 import { defineField, defineType } from "sanity";
 
 export const categoryType = defineType({
