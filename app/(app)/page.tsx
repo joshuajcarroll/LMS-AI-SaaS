@@ -1,5 +1,7 @@
-import Header from "@/components/Header";
+import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
+import { sanityFetch } from "@/sanity/lib/live";
+import { FEATURED_COURSES_QUERY, STATS_QUERY } from "@/sanity/lib/queries";
 import { currentUser } from "@clerk/nextjs/server";
 import {
   ArrowRight,
@@ -13,11 +15,18 @@ import {
   Sparkles,
   Star,
   Trophy,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 
 export default async function Home() {
-  const user = await currentUser();
+  // Fetch featured courses, stats, and check auth status
+  const [{ data: courses }, { data: stats }, user] = await Promise.all([
+    sanityFetch({ query: FEATURED_COURSES_QUERY }),
+    sanityFetch({ query: STATS_QUERY }),
+    currentUser(),
+  ]);
+
   const isSignedIn = !!user;
 
   return (
@@ -132,7 +141,7 @@ export default async function Home() {
               )}
             </div>
             {/* Stats */}
-            {/*<div
+            <div
               className="mt-16 grid grid-cols-3 gap-8 md:gap-16 animate-fade-in"
               style={{ animationDelay: "0.5s" }}
             >
@@ -160,9 +169,9 @@ export default async function Home() {
                 </div>
               ))}
             </div>
-          </div>*/}
           </div>
         </section>
+
         {/* Tiers Preview */}
         <section className="px-6 lg:px-12 py-20 max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-6">

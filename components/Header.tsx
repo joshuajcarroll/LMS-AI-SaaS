@@ -1,60 +1,30 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
-  Show,
   SignedIn,
   SignedOut,
   SignInButton,
-  useAuth,
   UserButton,
+  useAuth,
 } from "@clerk/nextjs";
-import {
-  BookOpen,
-  Code2,
-  LayoutDashboard,
-  Menu,
-  Play,
-  Sparkles,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
-
-function Logo() {
-  return (
-    <>
-      <div className="relative">
-        <div
-          className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center
-        shadow-lg shadow-violet-500/25 group-hover:shadow-violet-500-40 transition-shadow"
-        >
-          <Code2 className="w-5 h-5 text-white" />
-        </div>
-        <div
-          className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center
-        justify-center"
-        >
-          <Play className="w-2 h-2 text-white fill-white" />
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <span className="font-bold text-lg tracking-tight leading-none">
-          SONNY
-        </span>
-        <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">
-          Academy
-        </span>
-      </div>
-    </>
-  );
-}
+} from "@/components/ui/dropdown-menu";
+import {
+  Code2,
+  Play,
+  LayoutDashboard,
+  BookOpen,
+  Sparkles,
+  Menu,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const loggedOutLinks = [
   { href: "#courses", label: "Courses" },
@@ -62,7 +32,7 @@ const loggedOutLinks = [
   { href: "#testimonials", label: "Reviews" },
 ];
 
-function Header() {
+export function Header() {
   const pathname = usePathname();
   const { has } = useAuth();
 
@@ -76,24 +46,26 @@ function Header() {
       ? [{ href: "/pricing", label: "Account", icon: Sparkles }]
       : [{ href: "/pricing", label: "Upgrade", icon: Sparkles }]),
   ];
+
   return (
     <nav className="relative z-10 flex items-center justify-between px-6 lg:px-12 py-5 max-w-7xl mx-auto">
       {/* Logo - links to dashboard when logged in, home when logged out */}
       <div>
-        <Show when={"signed-out"}>
+        <SignedIn>
           <Link href="/dashboard" className="flex items-center gap-3 group">
             <Logo />
           </Link>
-        </Show>
-        <Show when={"signed-in"}>
+        </SignedIn>
+        <SignedOut>
           <Link href="/" className="flex items-center gap-3 group">
             <Logo />
           </Link>
-        </Show>
+        </SignedOut>
       </div>
+
       {/* Center Navigation - absolute positioning for perfect center on desktop */}
       <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <Show when={"signed-out"}>
+        <SignedOut>
           <div className="flex items-center gap-8 text-sm text-zinc-400">
             {loggedOutLinks.map((link) => (
               <Link
@@ -105,9 +77,9 @@ function Header() {
               </Link>
             ))}
           </div>
-        </Show>
+        </SignedOut>
 
-        <Show when={"signed-in"}>
+        <SignedIn>
           <div className="flex items-center gap-1">
             {loggedInLinks.map((link) => {
               const Icon = link.icon;
@@ -132,18 +104,19 @@ function Header() {
               );
             })}
           </div>
-        </Show>
+        </SignedIn>
       </div>
+
       {/* Right section */}
       <div className="flex items-center gap-3">
-        <Show when={"signed-out"}>
+        <SignedOut>
           {/* Mobile: Dropdown menu */}
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className="md:hidden">
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                className="text-zinc-400 hover:text-white hover:bg-zinc-800/50"
               >
                 <Menu className="w-5 h-5" />
               </Button>
@@ -178,16 +151,16 @@ function Header() {
               Start Learning
             </Button>
           </Link>
-        </Show>
+        </SignedOut>
 
-        <Show when={"signed-in"}>
+        <SignedIn>
           {/* Mobile: Dropdown menu next to user profile */}
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className="md:hidden">
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                className="text-zinc-400 hover:text-white hover:bg-zinc-800/50"
               >
                 <Menu className="w-5 h-5" />
               </Button>
@@ -228,10 +201,31 @@ function Header() {
               },
             }}
           />
-        </Show>
+        </SignedIn>
       </div>
     </nav>
   );
 }
 
-export default Header;
+function Logo() {
+  return (
+    <>
+      <div className="relative">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-violet-500/25 group-hover:shadow-violet-500/40 transition-shadow">
+          <Code2 className="w-5 h-5 text-white" />
+        </div>
+        <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+          <Play className="w-2 h-2 text-white fill-white" />
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <span className="font-bold text-lg tracking-tight leading-none">
+          SONNY
+        </span>
+        <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+          Academy
+        </span>
+      </div>
+    </>
+  );
+}
