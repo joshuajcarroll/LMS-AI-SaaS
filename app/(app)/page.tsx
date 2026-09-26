@@ -1,3 +1,4 @@
+import { CourseCard } from "@/components/courses";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { sanityFetch } from "@/sanity/lib/live";
@@ -272,18 +273,18 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/*{courses.map((course) => (
+            {courses.map((course) => (
               <CourseCard
                 key={course.slug!.current!}
                 slug={{ current: course.slug!.current! }}
                 title={course.title}
                 description={course.description}
-                tier={course.tier}
+                tier={course.tier as "free" | "pro" | "ultra" | null}
                 thumbnail={course.thumbnail}
                 moduleCount={course.moduleCount}
                 lessonCount={course.lessonCount}
               />
-            ))}*/}
+            ))}
           </div>
 
           <div className="text-center mt-10">

@@ -52,14 +52,7 @@ export type Lesson = {
           _key: string;
         }>;
         style?:
-          | "normal"
-          | "h1"
-          | "h2"
-          | "h3"
-          | "h4"
-          | "h5"
-          | "h6"
-          | "blockquote";
+          "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
         listItem?: "bullet" | "number";
         markDefs?: Array<{
           href?: string;
@@ -448,10 +441,45 @@ export type STATS_QUERY_RESULT = {
   lessonCount: number;
 };
 
+// Source: sanity/lib/queries.ts
+// Variable: DASHBOARD_COURSES_QUERY
+// Query: *[  _type == "course"] | order(_createdAt desc) {  _id,  title,  slug,  description,  tier,  featured,  completedBy,  thumbnail {    asset-> {      _id,      url    }  },  category-> {    _id,    title  },  modules[]-> {    lessons[]-> {      completedBy    }  },  "moduleCount": count(modules),  "lessonCount": count(modules[]->lessons[])}
+export type DASHBOARD_COURSES_QUERY_RESULT = Array<{
+  _id: string;
+  title: string | null;
+  slug: Slug | null;
+  description: string | null;
+  tier: "free" | "pro" | "ultra" | null;
+  featured: boolean | null;
+  completedBy: Array<string> | null;
+  thumbnail: {
+    asset: {
+      _id: string;
+      url: string | null;
+    } | null;
+  } | null;
+  category: {
+    _id: string;
+    title: string | null;
+  } | null;
+  modules: Array<{
+    lessons: Array<{
+      completedBy: Array<string> | null;
+    }> | null;
+  }> | null;
+  moduleCount: number | null;
+  lessonCount: number | null;
+}>;
+
 // Query TypeMap
-declare module "next-sanity" {
+declare global {
   interface SanityQueries {
     '*[\n  _type == "course"\n  && featured == true\n] | order(_createdAt desc)[0...6] {\n  _id,\n  title,\n  slug,\n  description,\n  tier,\n  featured,\n  thumbnail {\n    asset-> {\n      _id,\n      url\n    }\n  },\n  "moduleCount": count(modules),\n  "lessonCount": count(modules[]->lessons[])\n}': FEATURED_COURSES_QUERY_RESULT;
     '{\n  "courseCount": count(*[_type == "course"]),\n  "lessonCount": count(*[_type == "lesson"])\n}': STATS_QUERY_RESULT;
+    '*[\n  _type == "course"\n] | order(_createdAt desc) {\n  _id,\n  title,\n  slug,\n  description,\n  tier,\n  featured,\n  completedBy,\n  thumbnail {\n    asset-> {\n      _id,\n      url\n    }\n  },\n  category-> {\n    _id,\n    title\n  },\n  modules[]-> {\n    lessons[]-> {\n      completedBy\n    }\n  },\n  "moduleCount": count(modules),\n  "lessonCount": count(modules[]->lessons[])\n}': DASHBOARD_COURSES_QUERY_RESULT;
   }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module "@sanity/client" {
+  interface SanityQueries extends globalThis.SanityQueries {}
 }
