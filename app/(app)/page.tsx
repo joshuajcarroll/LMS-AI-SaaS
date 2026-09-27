@@ -273,18 +273,24 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {courses.map((course) => (
-              <CourseCard
-                key={course.slug!.current!}
-                slug={{ current: course.slug!.current! }}
-                title={course.title}
-                description={course.description}
-                tier={course.tier as "free" | "pro" | "ultra" | null}
-                thumbnail={course.thumbnail}
-                moduleCount={course.moduleCount}
-                lessonCount={course.lessonCount}
-              />
-            ))}
+            {courses.map((course) => {
+              const slug = course.slug?.current;
+              if (!slug) {
+                return null;
+              } // Skip courses without a slug
+              return (
+                <CourseCard
+                  key={course.slug!.current!}
+                  slug={{ current: course.slug!.current! }}
+                  title={course.title}
+                  description={course.description}
+                  tier={course.tier as "free" | "pro" | "ultra" | null}
+                  thumbnail={course.thumbnail}
+                  moduleCount={course.moduleCount}
+                  lessonCount={course.lessonCount}
+                />
+              );
+            })}
           </div>
 
           <div className="text-center mt-10">
