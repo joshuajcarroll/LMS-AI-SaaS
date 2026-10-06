@@ -3,7 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { BookOpen, Sparkles, ArrowRight } from "lucide-react";
 import { Header } from "@/components/Header";
-import { CourseList } from "@/components/courses";
+import { CourseList } from "@/components/courses/CourseList";
 import { sanityFetch } from "@/sanity/lib/live";
 import { DASHBOARD_COURSES_QUERY } from "@/sanity/lib/queries";
 import { getUserTier } from "@/lib/course-access";
