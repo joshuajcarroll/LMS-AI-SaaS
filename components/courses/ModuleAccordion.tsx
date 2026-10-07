@@ -9,11 +9,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Progress } from "@/components/ui/progress";
-import type { COURSE_WITH_MODULES_QUERYResult } from "@/sanity.types";
+import type { COURSE_WITH_MODULES_QUERY_RESULT } from "@/sanity.types";
 
 // Infer types from Sanity query result
 type Module = NonNullable<
-  NonNullable<COURSE_WITH_MODULES_QUERYResult>["modules"]
+  NonNullable<COURSE_WITH_MODULES_QUERY_RESULT>["modules"]
 >[number];
 type Lesson = NonNullable<Module["lessons"]>[number];
 
